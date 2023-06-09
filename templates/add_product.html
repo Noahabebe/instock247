@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de stock projet final</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+
+     <style>
+        /* Styling for store cards */
+        .store-card {
+            background-color: #f2f2f2;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease;
+            }
+
+        .store-card.hidden {
+          transform: translateX(-100%);
+        }
+
+        .store-card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .store-card p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Styling for the products container */
+        #products-container {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar">
+            <h2>Instock 24/7</h2>
+            <ul>
+                <li><a href="{{ url_for('stores') }}"><i class="fas fa-home"></i>Stores</a></li>
+                <li><a href="#"><i class="fas fa-address-book"></i>Contact</a></li>
+                <li><a href="#"><i class="fas fa-map-pin"></i>Map</a></li>
+            </ul>
+            <div class="social_media">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/instock247"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="main_content">
+            <div class="header">
+                    <h1>Welcome to Instock 24/7</h1>
+        <input type="text" id="search-input" placeholder="Search for a store">
+        <button type="button" id="search-button">Search</button>
+            </div>
+            <div class="info">
+                <div id="stores-container">
+                    {% for store in stores %}
+                        <div class="store-card" >
+                            <h3>{{ store.store_name }}</h3>
+                            <p>Location: {{ store.location }}</p>
+                            <p>Description: {{ store.description }}</p>
+                            <p>Owner: {{ store.owner }}</p>
+                            <a href="{{ url_for('store', store_name=store.store_name) }}">View Store</a>
+
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div id="products-container">
+                    <!-- Products will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+        // Add event listener to the search button
+
+
+    document.getElementById('search-button').addEventListener('click', searchStores);
+
+    // Define the search function
+    function searchStores() {
+      const searchQuery = document.getElementById('search-input').value.toLowerCase();
+      const cards = document.getElementsByClassName('store-card');
+
+
+      // Iterate over the cards and update their visibility based on the search query
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const storeName = card.querySelector('h3').textContent.toLowerCase();
+
+        if (storeName.includes(searchQuery)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      }
+    }
+
+
+
+</script>
+
+</body>
+</html>

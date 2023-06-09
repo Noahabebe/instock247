@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de stock projet final</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+
+     <style>
+        /* Styling for store cards */
+        .store-card {
+            background-color: #f2f2f2;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .store-card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .store-card p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Styling for the products container */
+        #products-container {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar">
+            <h2>Instock</h2>
+            <ul>
+             <li><a href="{{ url_for('create_store') }}"><i class="fas fa-home"></i>Create Stores</a></li>
+                <li><a href="#"><i class="fas fa-address-book"></i>Contact</a></li>
+                <li><a href="#"><i class="fas fa-map-pin"></i>Map</a></li>
+
+            </ul>
+            <div class="social_media">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/instock247"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="main_content">
+            <div class="header">
+                {% if current_user %}
+                    <h1>Welcome, {{ current_user.username }}</h1>
+                    <p>You are logged in!</p>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <h1>Welcome, Guest</h1>
+                    <p>Please <a href="{{ url_for('login') }}">login</a>.</p>
+                {% endif %}
+            </div>
+            <div class="info">
+                <div id="stores-container">
+                    {% for store in stores %}
+                        <div class="store-card" onclick="fetchProducts('{{ store.store_name }}')">
+                            <h3>{{ store.store_name }}</h3>
+                            <p>Location: {{ store.location }}</p>
+                            <p>Description: {{ store.description }}</p>
+                            <p>Owner: {{ store.owner }}</p>
+                            <a href="{{ url_for('get_store', store_name=store.store_name) }}">View Store</a>
+                             <a href="{{ url_for('delete_store', store_id=store.id) }}">Delete</a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <h1>Create a Store</h1>
+                <form method="POST" action="{{ url_for('create_store') }}">
+                    <label for="store_name">Store Name:</label>
+                    <input type="text" id="store_name" name="store_name" required><br><br>
+
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" required><br><br>
+
+                    <label for="description">Description:</label>
+                    <textarea id="description_store" name="description" required></textarea><br><br>
+
+                    <input type="submit" value="Create Store">
+                </form>
+
+                {% if store_created %}
+                    <h1>Create a Product</h1>
+                    <form method="POST" action="/add_product" enctype="multipart/form-data">
+                        <label for="name">Nom :</label>
+                        <input type="text" id="name" name="name" required><br>
+
+                        <label for="quantity">Quantité :</label>
+                        <input type="number" id="quantity" name="quantity" required><br>
+
+                        <label for="price">Prix :</label>
+                        <input type="number" id="price" name="price" required><br>
+
+                        <label for="description">Description :</label>
+                        <input type="text" id="description" name="description" required><br>
+
+                        <label for="image">Image :</label>
+                        <input type="file" id="image" name="image" accept=".png, .jpg, .jpeg"><br>
+
+                        <input type="submit" value="Ajouter">
+                    </form>
+                {% endif %}
+
+                <div id="products-container">
+                    <!-- Products will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    function fetchProducts(storeName) {
+        // Send an AJAX request to the server to fetch the products of the store
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/store/' + storeName + '/products', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Products successfully fetched
+                var productsContainer = document.getElementById('products-container');
+                productsContainer.innerHTML = xhr.responseText;
+            } else {
+                // Error occurred while fetching products
+                console.error('Error fetching products:', xhr.status);
+            }
+        };
+        xhr.send();
+    }
+</script>
+
+</body>
+</html>
