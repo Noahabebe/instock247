@@ -1,3 +1,5 @@
 Flask
 peewee
 werkzeug
+pymysql
+mysql
