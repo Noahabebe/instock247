@@ -14,10 +14,10 @@ app.secret_key = 's293kksd23'
 # Configure MySQL connection
 database = MySQLDatabase(
     database='mysql',
-    user='root',
+    user='admin',
     password='0911639394',
-    host='127.0.0.1',
-    port=3306,
+    host='https://662tokzg6b.execute-api.us-west-2.amazonaws.com/',
+    port=3300,
 
 )
 
