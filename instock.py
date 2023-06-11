@@ -16,8 +16,8 @@ database = MySQLDatabase(
     database='mysql',
     user='admin',
     password='0911639394',
-    host='https://662tokzg6b.execute-api.us-west-2.amazonaws.com/',
-    port=3000,
+    host='https://instock247.herokuapp.com/',
+    port=3306,
 
 )
 
