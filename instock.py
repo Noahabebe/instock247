@@ -2,28 +2,21 @@ import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from peewee import *
 from werkzeug.utils import secure_filename
+from PIL import Image
+import webview
 
+app = Flask(__name__,static_folder='./static', template_folder='./templates')
 
-
-
-app = Flask(__name__)
 app.secret_key = 's293kksd23'
 
 
-
-# Configure MySQL connection
-database = MySQLDatabase(
-    database='mysql',
-    user='admin',
-    password='0911639394',
-    host='https://instock247.herokuapp.com/',
-    port=3306,
-
-)
+# Configure SQLite connection
+database = SqliteDatabase('database.db')
 
 
 # Define the User model
 class User(Model):
+    id = AutoField(primary_key=True)
     username = CharField(unique=True)
     password = CharField()
 
@@ -39,6 +32,7 @@ class User(Model):
         database = database
         table_name = 'user'
 
+
 # Create the store table if it doesn't exist
 class Store(Model):
     id = AutoField()
@@ -50,6 +44,7 @@ class Store(Model):
     class Meta:
         database = database
         table_name = 'store'
+
 
 # Create the products table if it doesn't exist
 class Product(Model):
@@ -65,9 +60,10 @@ class Product(Model):
         table_name = 'products'
 
 
+# Connect to the database
 database.connect()
+database.create_tables([User, Store, Product])
 
-database.close()
 
 
 
@@ -85,7 +81,6 @@ users = {
 
 
 # Modify the index route
-
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -368,5 +363,9 @@ def stores():
 
     # Render the stores page
     return render_template('add_product.html', stores=stores)
+webview.create_window('Instock247', app, width=1700,height=1400)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+    #webview.start()
