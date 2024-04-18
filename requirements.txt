@@ -1,5 +1,6 @@
-Flask
+flask
 peewee
 werkzeug
 pymysql
-sqlite
+pywebview
+requests
