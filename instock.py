@@ -2,14 +2,16 @@ import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from peewee import *
 from werkzeug.utils import secure_filename
-from PIL import Image
-import webview
+import requests  
+#import webview
 
 app = Flask(__name__,static_folder='./static', template_folder='./templates')
 
 app.secret_key = 's293kksd23'
 
 
+
+YELP_API_KEY = os.environ.get('_ZzBW07hTN1WypmbX3FOPGJjXxKHSN1J137Pzdgk-DYYwJX8poCTVQ6zR6kAbAHipmgZtE2H_LcYIPf9jWezuGdYiNgmueF4tBtsz8uegufFVKFDU-9KfeOwbbMGZnYx')
 # Configure SQLite connection
 database = SqliteDatabase('database.db')
 
@@ -64,20 +66,73 @@ class Product(Model):
 database.connect()
 database.create_tables([User, Store, Product])
 
+YELP_API_KEY = '_ZzBW07hTN1WypmbX3FOPGJjXxKHSN1J137Pzdgk-DYYwJX8poCTVQ6zR6kAbAHipmgZtE2H_LcYIPf9jWezuGdYiNgmueF4tBtsz8uegufFVKFDU-9KfeOwbbMGZnYx'
 
-
-
-
+if not User.select().where(User.username == 'user1').exists():
+    # Create 'user1' with a password (replace 'password1' with the desired password)
+    User.create(username='user1', password='password1')
+    
 users = {
-    'user1': {
-        'username': 'user1',
-        'password': 'password1'
-    },
-    'user2': {
-        'username': 'user2',
-        'password': 'password2'
-    }
+  'user1': {
+      'username': 'user1',
+      'password': 'password1'
+  },
+  'user2': {
+      'username': 'user2',
+      'password': 'password2'
+  }
 }
+
+# Function to fetch business data from Yelp API and store it in the database
+def fetch_and_store_businesses():
+   if not session.get('stores_fetched'):
+        default_user = User.get_by_username('user1')
+   
+    
+        headers = {
+            'Authorization': 'Bearer ' + YELP_API_KEY
+        }
+        url = 'https://api.yelp.com/v3/businesses/search'
+        params = {
+            'term': 'food,shopping',
+            'categories': 'restaurants,shopping',
+            'location': 'Canada',
+            'limit': 1
+        }
+        response = requests.get(url, params=params, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            for business in data.get('businesses', []):
+                # Check if store already exists
+                existing_store = Store.get_or_none(store_name=business.get('name'))
+                if existing_store:
+                    print("Store already exists:", business.get('name'))
+                    continue
+
+                # Create store with owner "user1"
+                store = Store.create(
+                    store_name=business.get('name'),
+                    location=''.join(business.get('location', {}).get('display_address', [])),
+                    description=''.join([category['title'] for category in business.get('categories', [])]),
+                    owner=default_user
+                )
+                print("Store created:", business.get('name'))
+        session['stores_fetched'] = True       
+
+            
+            
+
+# Route to fetch and store business data from Yelp API
+@app.route('/fetch_businesses')
+def fetch_businesses():
+    fetch_and_store_businesses()
+    return 'Businesses fetched and stored successfully.'
+
+
+
+
+
 
 
 # Modify the index route
@@ -138,7 +193,7 @@ def index():
 
 
 
-@app.route('/store/<store_name>/add_product', methods=['POST'])
+@app.route('/store/<store_name>/add_product', methods=['GET', 'POST'])
 def render_add_product(store_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -152,7 +207,7 @@ def render_add_product(store_name):
 
 
 
-@app.route('/store/<store_name>/add_product', methods=['POST'])
+@app.route('/store/<store_name>/add_products', methods=['GET', 'POST'])
 def add_product(store_name):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -187,7 +242,7 @@ def add_product(store_name):
 
 
 # Route to retrieve the products
-@app.route('/products', methods=['GET'])
+@app.route('/products', methods=['POST'])
 def get_products():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -211,7 +266,7 @@ def delete_product(product_id):
     product = Product.get_or_none(Product.id == product_id)
     if product:
         product.delete_instance()
-
+        flash('Product deleted successfully.', 'success')
     # Redirect to the product listing page
     return redirect(url_for('get_products'))
 
@@ -254,7 +309,7 @@ def store(store_name):
         return "Store not found"
     products = Product.select().where(Product.store == store)
 
-    return render_template('stores.html',store=store, products=products,)
+    return render_template('store_details.html',store=store, products=products,)
 
 @app.route('/store/<store_name>', methods=['GET', 'POST'])
 def get_store(store_name):
@@ -272,16 +327,9 @@ def get_store(store_name):
         quantity = request.form['quantity']
         price = request.form['price']
         description = request.form['description']
-        image = request.files['image']  # Get the uploaded image file
+        
 
-        # Save the image to a folder
-        if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image.save(image_path)
-        else:
-            # Handle invalid or missing image file
-            return "Invalid image file"
+       
 
         # Perform any necessary operations with the product data
         # For example, you can insert the data into the database
@@ -355,15 +403,50 @@ def create_store():
 
     # Render the create store form
     return render_template('create_store.html', stores=stores, current_user=user, store_created=False)
-
+  
+   
+  
 @app.route('/stores')
 def stores():
-    # Fetch all stores from the database
-    stores = Store.select()
+  
+  
+   default_user = User.get_by_username('user1')
+   location = "Canada"
+   headers = {
+        'Authorization': 'Bearer ' + YELP_API_KEY  # Include your Yelp API key 
+    }
 
-    # Render the stores page
-    return render_template('add_product.html', stores=stores)
-webview.create_window('Instock247', app, width=1700,height=1400)
+    # Make a request to Yelp API to fetch data (e.g., restaurants in a specific location)
+   url = 'https://api.yelp.com/v3/businesses/search'
+   params = {
+        'term': 'restaurant and stores',
+        'location': 'Toronto'
+    }
+    
+   response = requests.get(url, params=params, headers=headers)
+
+   data = response.json()
+
+    # Parse and store the retrieved data in your database
+   for business in data.get('businesses', []):
+        # Extract relevant information from the Yelp API response and store it in your database
+        Store.create(
+            store_name=business.get('name'),
+            location= '' .join(business.get('location', {}).get('address1')),
+            description= '' .join(business.get('categories', [])[0].get('title')),
+            owner=default_user
+        )
+        
+        
+    # Fetch all stores from the database
+   stores = Store.select()
+
+    
+
+        # Render the stores page
+   return render_template('add_product.html', stores=stores)
+    
+#webview.create_window('Instock247', app, width=1700,height=1400)
 
 
 if __name__ == '__main__':
