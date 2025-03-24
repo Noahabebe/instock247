@@ -1,280 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Instock 24/7</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
- <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        
-        #content {
-            text-align: center;
-        }
+    <script src="https://kit.fontawesome.com/b99e675b6e.js" crossorigin="anonymous"></script>
+    <style>
+      /* Full height layout */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f4f4; /* Your main background color */
+        color: #333; /* Your main text color */
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        text-align: center;
+        padding: 20px;
+        max-width: 800px;
+      }
+      header {
+        margin-bottom: 40px;
+      }
+      header h1 {
+        font-size: 48px;
+        margin: 0;
+      }
+      header p {
+        font-size: 18px;
+        margin: 10px 0 20px;
+      }
+      .button-group {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
+      .btn {
+        padding: 15px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      /* Button colors preserved from your design */
+      .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+      .btn-secondary {
+        background-color: #28a745;
+        color: #fff;
+      }
+      .btn-secondary:hover {
+        background-color: #1e7e34;
+      }
+      footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        color: #777;
+      }
     </style>
-
-</head>
-<body>
-    <div id="DIV_1">
-	<div id="DIV_2">
-	</div>
-	<div id="DIV_3">
-		<div id="DIV_4">
-		</div>
-	</div>
-	<div id="DIV_5">
-		<button id="BUTTON_6">
-		</button>
-		<button id="BUTTON_7">
-		</button>
-		<div id="DIV_8">
-			<div id="DIV_9">
-				<svg id="svg_10">
-					<path id="path_11">
-					</path>
-					<path id="path_12">
-					</path>
-					<path id="path_13">
-					</path>
-				</svg>
-			</div>
-			<div id="DIV_14">
-				<div id="DIV_15">
-					<div id="DIV_16">
-						<div id="DIV_17">
-							<div id="DIV_18">
-								<div id="DIV_19">
-									<div id="DIV_20">
-										<h1 id="H1_21">
-											instock
-										</h1>
-										<p id="P_22">
-											Learn More
-										</p>
-									</div>
-									<div id="DIV_23">
-										<h3 id="H3_24">
-											<div id="DIV_25">
-												A modern app that helps you manage your stock in real time
-											</div>
-										</h3>
-										<div id="DIV_26">
-											<div id="DIV_27">
-												Instock247 is the best platform for stock management for small businesses and restaurents.
-											</div>
-										</div>
-										<div id="DIV_28">
-											<button type="button" id="BUTTON_29">
-												INSTOCK 24/7
-											</button>
-											<button type="button" id="BUTTON_30">
-												BUSINESSES
-											</button>
-										</div>
-									</div>
-								</div>
-								<div id="DIV_31">
-									<div id="DIV_32">
-										<div id="DIV_33">
-											<svg id="svg_34">
-												<circle id="circle_35">
-												</circle>
-												<line id="line_36">
-												</line>
-												<path id="path_37">
-												</path>
-											</svg>
-										</div>
-										<div id="DIV_38">
-											<div id="DIV_40">
-												Stay informed
-											</div>
-											<div id="DIV_42">
-												See real-time product availability from stores and restaurents across your network.
-											</div>
-										</div>
-									</div>
-									<div id="DIV_43">
-										<div id="DIV_44">
-											<svg id="svg_45">
-												<g id="g_46">
-													<path id="path_47">
-													</path>
-													<path id="path_48">
-													</path>
-												</g>
-											</svg>
-										</div>
-										<div id="DIV_49">
-											<div id="DIV_51">
-												Stay up to date
-											</div>
-											<div id="DIV_53">
-												Instock gives you real-time visibility of product availability across all your stores and brands.
-											</div>
-										</div>
-									</div>
-									<div id="DIV_54">
-										<div id="DIV_55">
-											<svg id="svg_56">
-												<path id="path_57">
-												</path>
-											</svg>
-										</div>
-										<div id="DIV_58">
-											<div id="DIV_60">
-												Stay informed
-											</div>
-											<div id="DIV_62">
-												Instock allows you to track the availability of products in real-time, so you always know what's in stock and what's not.
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div id="DIV_63">
-								<div id="DIV_64">
-									<h2 id="H2_65">
-										<div id="DIV_66">
-											Time-Saving Stock Management
-										</div>
-									</h2>
-									<div id="DIV_67">
-										<div id="DIV_68">
-											Instock helps you quickly understand your stock availability, so you can make decisions faster.
-										</div>
-									</div>
-									<button type="button" id="BUTTON_69">
-										Learn More
-									</button>
-								</div>
-							</div>
-							<footer id="FOOTER_70">
-								<ul id="UL_71">
-									<li id="LI_72">
-										instock
-									</li>
-									<li id="LI_73">
-										Instock247 is the best platform for stock management for small businesses and restaurents.
-									</li>
-									<li id="LI_74">
-										<svg id="svg_75">
-											<path id="path_76">
-											</path>
-										</svg>
-										<svg id="svg_77">
-											<path id="path_78">
-											</path>
-										</svg>
-										<svg id="svg_79">
-											<path id="path_80">
-											</path>
-										</svg>
-									</li>
-								</ul>
-								<ul id="UL_81">
-									<li id="LI_82">
-										Solutions
-									</li>
-									<li id="LI_83">
-										Marketing
-									</li>
-									<li id="LI_84">
-										Analytics
-									</li>
-									<li id="LI_85">
-										Commerce
-									</li>
-									<li id="LI_86">
-										Insights
-									</li>
-								</ul>
-								<ul id="UL_87">
-									<li id="LI_88">
-										Support
-									</li>
-									<li id="LI_89">
-										Pricing
-									</li>
-									<li id="LI_90">
-										Documentation
-									</li>
-									<li id="LI_91">
-										Guides
-									</li>
-									<li id="LI_92">
-										API Status
-									</li>
-								</ul>
-								<ul id="UL_93">
-									<li id="LI_94">
-										Company
-									</li>
-									<li id="LI_95">
-										About
-									</li>
-									<li id="LI_96">
-										Blog
-									</li>
-									<li id="LI_97">
-										Jobs
-									</li>
-									<li id="LI_98">
-										Press
-									</li>
-									<li id="LI_99">
-										Partners
-									</li>
-								</ul>
-								<ul id="UL_100">
-									<li id="LI_101">
-										Legal
-									</li>
-									<li id="LI_102">
-										Claim
-									</li>
-									<li id="LI_103">
-										Privacy
-									</li>
-									<li id="LI_104">
-										Terms
-									</li>
-								</ul>
-							</footer>
-						</div>
-					</div>
-				</div>
-<script>
- // JavaScript code
-
-// Function to handle redirection to add_product.html
-function redirectToAddProduct() {
-    window.location.href = "{{ url_for('stores') }}";
-}
-
-// Function to handle redirection to create_store.html
-function redirectToCreateStore() {
-    window.location.href = "{{ url_for('create_store') }}";
-}
-
-// Event listener for the "Get Started" button
-document.getElementById("BUTTON_29").addEventListener("click", redirectToAddProduct);
-
-// Event listener for the "Learn More" button
-document.getElementById("BUTTON_30").addEventListener("click", redirectToCreateStore);
-
-</script>
-			
-</body>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Instock 24/7</h1>
+        <p>A modern app for real-time stock management.</p>
+      </header>
+      <div class="button-group">
+        <button class="btn btn-primary" id="instockBtn">INSTOCK 24/7</button>
+        <button class="btn btn-secondary" id="businessesBtn">BUSINESSES</button>
+      </div>
+    </div>
+    <footer>
+      &copy; 2025 Instock247. All rights reserved.
+    </footer>
+    <script>
+      // Redirect on button clicks
+      document.getElementById("instockBtn").addEventListener("click", function () {
+        window.location.href = "{{ url_for('stores') }}";
+      });
+      document.getElementById("businessesBtn").addEventListener("click", function () {
+        window.location.href = "{{ url_for('create_store') }}";
+      });
+    </script>
+  </body>
 </html>
